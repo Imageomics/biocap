@@ -1,45 +1,44 @@
 ---
-abstract: "Foundation models trained at scale exhibit remarkable emergent behaviors, 
-  learning new capabilities beyond their initial training objectives. We find such emergent 
-  behaviors in biological vision models via large-scale contrastive vision-language training. 
-  To achieve this, we first curate TreeOfLife-200M, comprising 214 million images of living 
-  organisms, the largest and most diverse biological organism image dataset to date. We then 
-  train BioCLIP 2 on TreeOfLife-200M to distinguish different species. Despite the narrow 
-  training objective, BioCLIP 2 yields extraordinary accuracy when applied to various biological 
-  visual tasks such as habitat classification and trait prediction. We identify emergent 
-  properties in the learned embedding space of BioCLIP 2. At the inter-species level, the 
-  embedding distribution of different species aligns closely with functional and ecological 
-  meanings (e.g. beak sizes and habitats). At the intra-species level, instead of being diminished, 
-  the intra-species variations (e.g. life stages and sexes) are preserved and better separated 
-  in subspaces orthogonal to inter-species distinctions. We provide formal proof and analyses 
-  to explain why hierarchical supervision and contrastive objectives encourage these emergent 
-  properties. Crucially, our results reveal that these properties become increasingly significant 
-  with larger-scale training data, leading to a biologically meaningful embedding space."
+abstract: "This work investigates descriptive captions as an additional source of supervision
+  for biological multimodal foundation models. Images and captions can be viewed
+  as complementary samples from the latent morphospace of a species, each capturing 
+  certain biological traits. Incorporating captions during training encourages
+  alignment with this shared latent structure, emphasizing potentially diagnostic
+  characters while suppressing spurious correlations. The main challenge, however,
+  lies in obtaining faithful, instance-specific captions at scale. This requirement
+  has limited the utilization of natural language supervision in organismal biology 
+  compared with many other scientific domains. We complement this gap by
+  generating synthetic captions with multimodal large language models (MLLMs),
+  guided by Wikipedia-derived visual information and taxon-tailored format examples. 
+  These domain-specific contexts help reduce hallucination and yield accurate,
+  instance-based descriptive captions. Using these captions, we train BioCAP (i.e.,
+  BioCLIP with Captions), a biological foundation model that captures rich semantics 
+  and achieves strong performance in species classification and text-image
+  retrieval. These results demonstrate the value of descriptive captions beyond labels
+  in bridging biological images with multimodal foundation models."
 authors:
-  - family-names: Gu
-    given-names: Jianyang
-  - family-names: Stevens
-    given-names: Samuel
+  - family-names: Zhang
+    given-names: Ziheng
+  - family-names: Ma
+    given-names: Xinyue
   - family-names: Campolongo
     given-names: "Elizabeth G."
   - family-names: Thompson
     given-names: "Matthew J."
   - family-names: Zhang
     given-names: Net
-  - family-names: Wu
-    given-names: Jiaman
-  - family-names: Mai
-    given-names: Zheda
+  - family-names: Gu
+    given-names: Jianyang
 cff-version: 1.2.0
-date-released: "2025-09-03"
+date-released: "2025-10-XX" # update before release
 identifiers:
-  - doi: "10.5281/zenodo.15644363"
-  - description: "The GitHub release URL of tag v1.0.1."
+  - doi: "" # Add on release
+  - description: "The GitHub release URL of tag v1.0.0."
     type: url
-    value: "https://github.com/Imageomics/bioclip-2/releases/tag/v1.0.1"
-  - description: "The GitHub URL of the commit tagged with v1.0.1."
+    value: "https://github.com/Imageomics/biocap/releases/tag/v1.0.0"
+  - description: "The GitHub URL of the commit tagged with v1.0.0."
     type: url
-    value: "https://github.com/Imageomics/bioclip-2/tree/92bf5e1f74e40df91a02c4dd6cad63b3396c94cf"
+    value: "https://github.com/Imageomics/biocap/tree/<commit-hash>" # update on release
 keywords:
   - clip
   - biology
@@ -54,13 +53,38 @@ keywords:
   - "evolutionary biology"
   - multimodal
   - "knowledge-guided"
+  - "synthetic captions"
+  - "caption-generation"
 license: MIT
 message: "If you use this software, please cite both the article and the software itself."
-repository-code: "https://github.com/Imageomics/bioclip-2"
-title: "BioCLIP 2"
-version: 1.0.1
+repository-code: "https://github.com/Imageomics/biocap"
+title: "BioCAP"
+version: 1.0.0
 type: software
 references:
+  - authors:
+      - family-names: Gu
+        given-names: Jianyang
+      - family-names: Stevens
+        given-names: Samuel
+      - family-names: Campolongo
+        given-names: "Elizabeth G."
+      - family-names: Thompson
+        given-names: "Matthew J."
+      - family-names: Zhang
+        given-names: Net
+      - family-names: Wu
+        given-names: Jiaman
+      - family-names: Mai
+        given-names: Zheda
+    cff-version: 1.2.0
+    date-released: "2025-09-03"
+    doi: "10.5281/zenodo.15644363"
+    license: MIT
+    repository-code: "https://github.com/Imageomics/bioclip-2"
+    title: "BioCLIP 2"
+    version: 1.0.1
+    type: software
   - authors:
       - family-names: Stevens
         given-names: Samuel

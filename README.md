@@ -1,13 +1,12 @@
-# BioCLIP 2  [![DOI](https://zenodo.org/badge/991449538.svg)](https://doi.org/10.5281/zenodo.15644363)
+# BioCAP
 
-This repository contains the code for [BioCLIP 2](https://huggingface.co/imageomics/bioclip-2) training and evaluation (testing and visualizing embeddings). We developed this repository based on [BioCLIP](https://github.com/imageomics/BioCLIP) and [OpenCLIP](https://github.com/mlfoundations/open_clip).
-BioCLIP 2 is trained on the [TreeOfLife-200M dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-200M) and achieves state-of-the-art performance on both species classification and other biological visual tasks. The BioCLIP 2 website is hosted from the `gh-pages` branch of this repository.
+This repository contains the code for [BioCAP](https://huggingface.co/imageomics/biocap) training, evaluation, caption generation, and Wikipedia scraper. We developed this repository based on [BioCLIP](https://github.com/imageomics/BioCLIP) and [OpenCLIP](https://github.com/mlfoundations/open_clip).
+BioCAP is trained on the [TreeOfLife-10M dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) paired with a new [TreeOfLife-10M Captions dataset](), curated for this model. The BioCAP website is hosted from the `gh-pages` branch of this repository.
 
-[Paper](https://doi.org/10.48550/arXiv.2505.23883) | [Model](https://huggingface.co/imageomics/bioclip-2) | [Data](https://huggingface.co/datasets/imageomics/TreeOfLife-200M) | [Demo](https://huggingface.co/spaces/imageomics/bioclip-2-demo)
+[Paper]() | [Model](https://huggingface.co/imageomics/biocap) | [Data](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions) | [Demo]()
 ---
 
-BioCLIP 2 is a CLIP model trained on a new 200M-image dataset of biological organisms with fine-grained taxonomic labels.
-BioCLIP 2 outperforms general domain baselines on a wide spread of biology-related tasks, including zero-shot and few-shot classification.
+BioCAP is a CLIP model trained on the 10M-image dataset with both taxonomic labels and fine-grained synthetic captions. BioCAP achieves strong performance on biology-related tasks, including zero-shot classification and text-image retrieval.
 
 ## Table of Contents
 
@@ -18,14 +17,16 @@ BioCLIP 2 outperforms general domain baselines on a wide spread of biology-relat
 
 ## Model
 
-The main differences in the training implementation between BioCLIP 2 and BioCLIP are the adopted model architecture and the introduction of experience replay. BioCLIP 2 employs a ViT-L/14 CLIP architecture pre-trained with LAION-2B data. Along with the contrastive optimization of biological organism data, we also include part of the LAION-2B data for experience replay. In order to reduce the influence of the domain gap between hierarchical labels and image captions, we use two separate visual projectors on top of the visual encoder. This part of the code is in [transformer.py](src/open_clip/transformer.py).
-We provide the weight of BioCLIP 2 in the [BioCLIP 2 model repo](https://huggingface.co/imageomics/bioclip-2).
+The main differences in the training implementation between BioCAP and BioCLIP are the adopted model architecture and the introduction of captions. BioCAP uses two separate visual projectors. This part of the code is [transformer.py](train_and_eval/open_clip/transformer.py). In addition, we incorporate synthetic captions as complementary supervision. Synthetic captions help bridge this gap by providing descriptive, trait-focused supervision. This part of the code is [data.py](train_and_eval/open_clip_train/data.py) and [train.py](train_and_eval/open_clip_train/train.py).
+We provide the weight of BioCAP in the [BioCAP model repo](https://huggingface.co/imageomics/biocap).
 
 ## Commands
 
+For more details on the training and evaluation processes and downloading the requisit data, please see the [BioCAP Pipeline](BioCAP-pipeline.md). A summary for training and evaluating on the different tasks is provided below.
+
 ### Training
-The [TreeOfLife-200M](https://huggingface.co/datasets/imageomics/TreeOfLife-200M) images can be downloaded from their original sources with [distributed-downloader](https://github.com/Imageomics/distributed-downloader). [TreeOfLife-toolbox/docs](https://github.com/Imageomics/TreeOfLife-toolbox/tree/main/docs#treeoflife200m-dataset-download-guide) contains instructions for full download into the proper format, and the code to construct the webdataset for training. These repositories are included in the supplementary material.
-[img2dataset](https://github.com/rom1504/img2dataset) can be used to download data from the first three metadata parquet files of LAION-2B-en; we use the first downloaded 4,000 tar files for experience replay. Finally, download the validation set from [TreeOfLife-10M](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) ([download instructions](https://github.com/Imageomics/bioclip/blob/main/docs/imageomics/treeoflife10m.md)), as we use that for evaluation during training.
+
+First download the data from [TreeOfLife-10M](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) and [TreeOfLife-10M Captions](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions) to reproduce the model training.
 
 Clone this repository, then install the requirements:
 ```
@@ -33,70 +34,100 @@ conda env create -f requirements-training.yml
 ```
 
 To train the model, run:
-```
+```bash
 sbatch slurm/train.sh
 ```
 
 ### Evaluation
-**Species classification**
 
-We evaluated [BioCLIP 2](https://huggingface.co/imageomics/bioclip-2) on the same test sets as used for [BioCLIP](https://huggingface.co/imageomics/bioclip), as well as a newly curated camera trap test set:
-
-- [NABirds](https://dl.allaboutbirds.org/nabirds): In place of [Birds525](https://www.kaggle.com/datasets/gpiosenka/100-bird-species), since it is no longer available.
-- [Meta-Album](https://meta-album.github.io/): For comparison to [BioCLIP](https://huggingface.co/imageomics/bioclip), we used the Plankton, Insects, Insects 2, PlantNet, Fungi, PlantVillage, and Medicinal Leaf datasets.
-- [Rare Species](https://huggingface.co/datasets/imageomics/rare-species): Nearly 12K images representing 400 species labeled Near Threatened through Extinct in the Wild by the [IUCN Red List](https://www.iucnredlist.org/).
-- [IDLE-OO Camera Traps](https://huggingface.co/datasets/imageomics/IDLE-OO-Camera-Traps): A new dataset we curated to evaluate performance on camera trap images. It is constructed from five [Labeled Information Library of Alexandria: Biology and Conservation (LILA BC)](https://lila.science) datasets labeled to the image-level, which we then balanced. See the [IDLE-OO Camera Traps dataset](https://huggingface.co/datasets/imageomics/IDLE-OO-Camera-Traps) for more details.
-
-The metadata used in evaluation is provided in [`data/annotation`](data/annotation/), including [NABirds](data/annotation/nabirds), [Rare Species](data/annotation/rare_species/), and other benchmarks from [Meta Album](data/annotation/meta-album/). All evaluation parameters are described in [src/evaluation/README.md](src/evaluation/README.md).
-Please be sure to update the directories accordingly to reflect the locations of these data and metadata in `slurm/eval.sh` and run:
+First install the evaluation environment:
 ```
-sbatch slurm/eval.sh
+conda env create -f environments/eval.yml
 ```
 
-**Other biological visual tasks**
+#### Species classification
 
-We also evaluated on biological tasks that go beyond species classification with the following datasets:
-- [NeWT](https://github.com/visipedia/newt)
-- [FishNet](https://fishnet-2023.github.io/)
-- [AwA2](https://cvml.ista.ac.at/AwA2/)
-- [Herbarium19](https://www.kaggle.com/c/herbarium-2019-fgvc6/data)
-- [PlantDoc](https://github.com/pratikkayal/PlantDoc-Dataset)
+We evaluated [BioCAP](https://huggingface.co/imageomics/bioclip-2) on zero-shot classification evaluation using the same test datasets as [BioCLIP 2](https://huggingface.co/imageomics/bioclip-2#evaluation). The metadata used in evaluation zero-shot classification is provided in [`data/classification_annotation`](data/annotation/). All evaluation parameters are described in [src/evaluation/README.md](src/evaluation/README.md).
+Please be sure to update the directories accordingly to reflect the locations of these data and metadata in `slurm/eval_zero_shot.sh`, then run:
 
-Please be sure to update the directories accordingly to reflect the locations of these data in `slurm/eval_other.sh` and run:
+```bash
+sbatch slurm/eval_zero_shot.sh
 ```
-sbatch slurm/eval_other.sh
+
+### Image Re-ranking (Query)
+
+For this task, we evaluated on [INQUIRE-Rerank](https://github.com/inquire-benchmark/INQUIRE/), which assesses a model’s ability to reorder 100 initially retrieved images per query so that relevant ones appear higher in the ranking.
+
+This evaluation can be performed by running:
+
+```bash
+sbatch slurm/eval_inquire.sh
 ```
+
+### Text-to-Image Retrieval Benchmarks
+
+We also evaluate our model on the text-image retrieval task using datasets collected from [Cornell Lab of Ornithology, Macaulay Library](https://www.macaulaylibrary.org) and [PlantID.net](https://plantid.net/Home.aspx). The metadata used is provided in [`data/retrieval_annotations`](data/annotation/). Please be sure to update the directories accordingly to reflect the locations of these data and metadata in `slurm/eval_retrieval.sh`, then run:
+
+```bash
+sbatch slurm/eval_retrieval.sh
+```
+
+### Caption generation
+
+Run the following to create the caption generation environment:
+
+```
+conda env create -f environments/caption.yml
+```
+
+We use [vLLM](https://github.com/vllm-project/vllm) with [InternVL-3-38B](https://huggingface.co/OpenGVLab/InternVL3-38B-AWQ) to generate fine-grained captions for images. The caption generation process enriches species images with detailed descriptions of visual traits and characteristics. With Wikipedia-derived visual information and taxon-tailored format examples as domain-specific contexts from [`data/wiki_and_format_example/`](data/wiki_and_format_example/), the model generates biologically accurate and descriptive captions.
+
+To generate captions, configure the paths in `slurm/run_caption_gen.sh`, then run:
+```bash
+sbatch slurm/run_caption_gen.sh
+```
+
+### Wiki scraper
+
+We provide scripts to scrape species descriptions from Wikipedia. The scraper extracts visual and morphological information for species based on their binomial names. Species lists are provided in [`data/wiki_species/`](data/wiki_species/), which include both unique and ambiguous species names.
+
+To run the Wikipedia scraper:
+```bash
+sbatch slurm/scrape_wiki.sh
+```
+
+Note that Wikipedia is not versioned, so this process is not perfectly reproducible. This is why we provide the results of this webscraping in the [TreeOfLife-10M-Captions dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions).
 
 <h2 id="paper">Paper, Website, and Data</h2>
 
-We have a preprint on [arXiv](https://doi.org/10.48550/arXiv.2505.23883) and a [project website](https://imageomics.github.io/bioclip-2/).
+We have a preprint on [arXiv]() and a [project website](https://imageomics.github.io/biocap/).
 
-Our data is published on Hugging Face: [TreeOfLife-200M](https://huggingface.co/datasets/imageomics/TreeOfLife-200M) and [IDLE-OO Camera Traps](https://huggingface.co/datasets/imageomics/IDLE-OO-Camera-Traps). Step-by-step download instructions for TreeOfLife-200M are available in [TreeOfLife-toolbox](https://github.com/Imageomics/TreeOfLife-toolbox/tree/main/docs#treeoflife200m-dataset-download-guide).
+Our data is published on Hugging Face: [TreeOfLife-10M-Captions](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions), as is the existing [TreeOfLife-10M](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) to which the captions are applied (this is the source of the images and their associated taxonomic ranks).
 
 ## Citation
 
 Please cite our papers and the associated repositories if you use our code or results.
 
 ```
-@article{gu2025bioclip,
-  title = {{B}io{CLIP} 2: Emergent Properties from Scaling Hierarchical Contrastive Learning}, 
-  author = {Jianyang Gu and Samuel Stevens and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Jiaman Wu and Andrei Kopanev and Zheda Mai and Alexander E. White and James Balhoff and Wasila M Dahdul and Daniel Rubenstein and Hilmar Lapp and Tanya Berger-Wolf and Wei-Lun Chao and Yu Su},
+@article{<code>,
+  title = {{B}io{CAP}}, 
+  author = {},
   year = {2025},
-  eprint={2505.23883},
+  eprint={},
   archivePrefix={arXiv},
   primaryClass={cs.CV},
-  url={https://arxiv.org/abs/2505.23883}, 
+  url={}, 
 }
  ```
 
 Our code (this repository):
 ```
-@software{bioclip2code,
-  author = {Jianyang Gu and Samuel Stevens and Elizabeth G. Campolongo and Matthew J. Thompson and Net Zhang and Jiaman Wu and Zheda Mai},
-  doi = {10.5281/zenodo.15644363},
-  title = {{B}io{CLIP} 2},
-  version = {1.0.1},
-  month = {sep},
+@software{biocapcode,
+  author = {Ziheng Zhang and Xinyue Ma and Elizabeth G. Campolongo and Matthew J. Thompson and Net Zhang and Jianyang Gu},
+  doi = {},
+  title = {{B}io{CAP}},
+  version = {1.0.0},
+  month = {oct},
   year = {2025}
 }
 ```
@@ -132,7 +163,18 @@ Original Code:
   year = {2024}
 }
 ```
+BioCLIP 2 Code:
+```
+@software{bioclip2code,
+  author = {Jianyang Gu and Samuel Stevens and Elizabeth G. Campolongo and Matthew J. Thompson and Net Zhang and Jiaman Wu and Zheda Mai},
+  doi = {10.5281/zenodo.15644363},
+  title = {{B}io{CLIP} 2},
+  version = {1.0.1},
+  month = {sep},
+  year = {2025}
+}
+```
 
 ## License
 
-BioCLIP 2 is released under the MIT License. Some elements of the code are copyright by others (see [`LICENSE`](LICENSE)); detailed provenance information is provided in [`HISTORY.md`](HISTORY.md).
+BioCAP is released under the MIT License. Some elements of the code are copyright by others (see [`LICENSE`](LICENSE)); detailed provenance information is provided in [`HISTORY.md`](HISTORY.md).
