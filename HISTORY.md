@@ -1,3 +1,9 @@
+## BioCAP
+
+* Based on [openCLIP 2.29.0](https://github.com/mlfoundations/open_clip/tree/82d7496799688ea11772576b73c6b71fb7dcb986).
+* Trained on [TreeOfLife-10M](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) paired with [TreeOfLife-10M-Captions](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions).
+* See [BioCLIP 2 notes](#bioclip-2), below, for other code derivations; these commits are included in this repository as it was initialized from [BioCLIP 2 commit c8eec50](https://github.com/Imageomics/bioclip-2/tree/c8eec5003ada10a5999377cae854f668d9298219) (also [commit c8eec50](https://github.com/Imageomics/bioclap/tree/c8eec5003ada10a5999377cae854f668d9298219) in this repo).
+
 ## BioCLIP 2
 
 * Based on [openCLIP 2.29.0](https://github.com/mlfoundations/open_clip/tree/82d7496799688ea11772576b73c6b71fb7dcb986).
