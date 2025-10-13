@@ -22,16 +22,18 @@ We provide the weight of BioCAP in the [BioCAP model repo](https://huggingface.c
 
 ## Commands
 
+Clone this repository, then install the requirements:
+```
+conda env create -f biocap.yml
+```
+
 For more details on the training and evaluation processes and downloading the requisit data, please see the [BioCAP Pipeline](BioCAP-pipeline.md). A summary for training and evaluating on the different tasks is provided below.
 
 ### Training
 
 First download the data from [TreeOfLife-10M](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) and [TreeOfLife-10M Captions](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions) to reproduce the model training.
 
-Clone this repository, then install the requirements:
-```
-conda env create -f requirements-training.yml
-```
+
 
 To train the model, run:
 ```bash
@@ -40,14 +42,10 @@ sbatch slurm/train.sh
 
 ### Evaluation
 
-First install the evaluation environment:
-```
-conda env create -f environments/eval.yml
-```
 
 #### Species classification
 
-We evaluated [BioCAP](https://huggingface.co/imageomics/bioclip-2) on zero-shot classification evaluation using the same test datasets as [BioCLIP 2](https://huggingface.co/imageomics/bioclip-2#evaluation). The metadata used in evaluation zero-shot classification is provided in [`data/classification_annotation`](data/annotation/). All evaluation parameters are described in [src/evaluation/README.md](src/evaluation/README.md).
+We evaluated [BioCAP](https://huggingface.co/imageomics/bioclip-2) on zero-shot classification evaluation using the same test datasets as [BioCLIP 2](https://huggingface.co/imageomics/bioclip-2#evaluation). The metadata used in evaluation zero-shot classification is provided in [`data/classification_annotation`](data/annotation/). 
 Please be sure to update the directories accordingly to reflect the locations of these data and metadata in `slurm/eval_zero_shot.sh`, then run:
 
 ```bash
@@ -74,11 +72,7 @@ sbatch slurm/eval_retrieval.sh
 
 ### Caption generation
 
-Run the following to create the caption generation environment:
 
-```
-conda env create -f environments/caption.yml
-```
 
 We use [vLLM](https://github.com/vllm-project/vllm) with [InternVL-3-38B](https://huggingface.co/OpenGVLab/InternVL3-38B-AWQ) to generate fine-grained captions for images. The caption generation process enriches species images with detailed descriptions of visual traits and characteristics. With Wikipedia-derived visual information and taxon-tailored format examples as domain-specific contexts from [`data/wiki_and_format_example/`](data/wiki_and_format_example/), the model generates biologically accurate and descriptive captions.
 
@@ -123,7 +117,7 @@ Please cite our papers and the associated repositories if you use our code or re
 Our code (this repository):
 ```
 @software{biocapcode,
-  author = {Ziheng Zhang and Xinyue Ma and Elizabeth G. Campolongo and Matthew J. Thompson and Net Zhang and Jianyang Gu},
+  author = {Ziheng Zhang and Xinyue Ma and Elizabeth G.  Campolongo and Matthew J. Thompson and Net Zhang and Jianyang Gu},
   doi = {},
   title = {{B}io{CAP}},
   version = {1.0.0},
