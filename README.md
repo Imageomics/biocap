@@ -1,7 +1,7 @@
 # BioCAP
 
 This repository contains the code for [BioCAP](https://huggingface.co/imageomics/biocap) training, evaluation, caption generation, and Wikipedia scraper. We developed this repository based on [BioCLIP](https://github.com/imageomics/BioCLIP) and [OpenCLIP](https://github.com/mlfoundations/open_clip).
-BioCAP is trained on the [TreeOfLife-10M dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) paired with a new [TreeOfLife-10M Captions dataset](), curated for this model. The BioCAP website is hosted from the `gh-pages` branch of this repository.
+BioCAP is trained on the [TreeOfLife-10M dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) paired with a new [TreeOfLife-10M Captions dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions), curated for this model. The BioCAP website is hosted from the `gh-pages` branch of this repository.
 
 [Paper]() | [Model](https://huggingface.co/imageomics/biocap) | [Data](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions) | [Demo]()
 ---
