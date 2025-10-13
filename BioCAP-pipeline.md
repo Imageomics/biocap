@@ -67,7 +67,7 @@ See the [Evaluation Data section](#evaluation-data) below for details on accessi
 ## Installation Requirements
 
 ```bash
-conda env create -f biocap.yml
+conda env create -f biocap_requirements.yml
 
 ```
 

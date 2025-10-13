@@ -24,7 +24,7 @@ We provide the weight of BioCAP in the [BioCAP model repo](https://huggingface.c
 
 Clone this repository, then install the requirements:
 ```
-conda env create -f biocap.yml
+conda env create -f biocap_requirements.yml
 ```
 
 For more details on the training and evaluation processes and downloading the requisit data, please see the [BioCAP Pipeline](BioCAP-pipeline.md). A summary for training and evaluating on the different tasks is provided below.

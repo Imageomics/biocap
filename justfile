@@ -1,8 +1,8 @@
 lint: fmt
-	ruff check src/imageomics
+	ruff check train_and_eval/imageomics
 
 fmt:
-	ruff format src/imageomics
+	ruff format train_and_eval/imageomics
 
 test: lint
-	pytest src/imageomics/
+	pytest train_and_eval/imageomics/
