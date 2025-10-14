@@ -130,7 +130,7 @@ INQUIRE is an iNaturalist-based [dataset](https://github.com/inquire-benchmark/I
 This task is to use the provided descriptive caption to retrieve the associated images from each source. CSVs are provided, in the `retrieval_annotations/` directory, for each with the required information to download the precise images used.
 We recommend using the [cautious-robot package](https://github.com/Imageomics/cautious-robot) to automatically validate the download, since these are not packaged benchmarks:
 
-```console
+```bash
 pip install cautious-robot
 cautious-robot -i <path/to/benchmark-CSV> -o <path/to/images/folder> -n id -u source_url -v md5
 
