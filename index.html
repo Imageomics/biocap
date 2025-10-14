@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>BioCAP: Exploiting Synthetic Captions Beyond Labels in Biological Foundation Models</title>
+
+  <!-- https://ogimage.click/ -->
+  <meta name="og:title" content="BioCAP" />
+  <meta name="og:description" content="BioCAP: Exploiting Synthetic Captions Beyond Labels in Biological Foundation Models" />
+  <meta name="og:url" content="https://imageomics.github.io/biocap/" />
+  <meta name="og:image" content="https://imageomics.github.io/biocap/images/biocap-ogimage.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://imageomics.github.io/biocap/images/biocap-ogimage.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BioCAP" />
+
+  <meta name="theme-color" content="#939936">
+
+  <link href="./css/mobile.css" rel="stylesheet" type="text/css" media="screen and (max-width: 800px)">
+  <link href="./css/main.css" rel="stylesheet" type="text/css" media="screen and (min-width: 800px)">
+  <link rel="icon" href="images/icons/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <main>
+    <div style="text-align: center">
+      Previous Version: <a href="https://imageomics.github.io/bioclip">BioCLIP</a>
+      <details>
+        <summary>And More Research</summary>
+        <div class="options">
+          <p><a href="https://imageomics.github.io/bioclip-2/">BioCAP</a></p>
+          <p><a href="https://github.com/Imageomics/Finer-CAM">FinerCAM</a></p>
+          <p><a href="https://github.com/Imageomics/Prompt_CAM">PromptCAM</a></p>
+        </div>
+      </details>
+    </div>
+    <h1>BioCAP: Exploiting Synthetic Captions Beyond Labels in Biological Foundation Models</h1>
+    <p class="centered">
+      <span class="authors-line">
+        <sup>1</sup><a href="https://link7808.github.io">Ziheng Zhang</a>,
+        <sup>1</sup><a href="https://openreview.net/profile?id=~Xinyue_Ma5">Xinyue Ma</a>,
+        <sup>1</sup><a href="https://arpita-chowdhury-osu.github.io">Arpita Chowdhury</a>,
+        <sup>1</sup><a href="https://egrace479.github.io/">Elizabeth G Campolongo</a>,
+        <sup>1</sup><a href="https://www.linkedin.com/in/thompson-m-j/">Matthew J Thompson</a>,
+        <sup>1</sup><a href="https://www.linkedin.com/in/net-zhang/">Net Zhang</a>,
+      </span><br>
+      <span class="authors-line">
+        <sup>1</sup><a href="https://samuelstevens.me/">Samuel Stevens</a>,
+        <sup>2</sup><a href="https://scholars.duke.edu/person/Hilmar.Lapp/research">Hilmar Lapp</a>,
+        <sup>1</sup><a href="https://cse.osu.edu/people/berger-wolf.1">Tanya Berger-Wolf</a>,
+        <sup>1</sup><a href="https://ysu1989.github.io/">Yu Su</a>,
+        <sup>1</sup><a href="https://sites.google.com/view/wei-lun-harry-chao">Wei-Lun (Harry) Chao</a>,
+        <sup>1</sup><a href="https://vimar-gu.github.io/">Jianyang Gu</a>
+      </span>
+    </p>
+    <p class="centered">
+      <sup>1</sup>The Ohio State University,
+      <sup>2</sup>Duke University
+    </p>
+    <p class="text-sm centered">
+      <a href="mailto:zhang.13617@osu.edu">zhang.13617@osu.edu</a>,
+      <a href="mailto:gu.1220@osu.edu">gu.1220@osu.edu</a>, 
+    </p>
+
+    <p class="centered">
+      <a class="pill-button" href="https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions">
+        <img src="images/icons/huggingface.svg" /> Data (Coming Soon)
+      </a>
+      <a class="pill-button" href="https://huggingface.co/imageomics/biocap">
+        <img src="images/icons/huggingface.svg" /> Model
+      </a>
+      <a class="pill-button" href="https://huggingface.co/spaces/imageomics/biocap-demo">
+        <img src="images/icons/huggingface.svg" /> Demo (Coming Soon)
+      </a>
+      <a class="pill-button" href="">
+        <img src="images/icons/arxiv.svg" /> Paper
+      </a>
+    </p>
+    <p class="centered">
+      <a class="pill-button wide" href="https://github.com/Imageomics/biocap">
+        <img src="images/icons/github.svg" /> BioCAP Code
+      </a>
+
+    </p>
+    <figure>
+      <a href="images/teaser.pdf">
+        <img srcset="" src="images/teaser.svg" alt="" loading="lazy">
+      </a>
+      <figcaption>
+        Figure 1: <b>Left</b>: <b>Different strategies to create captions for biological images.</b> Wikipedia offers rich domain knowledge, but descriptions are often generic and not directly grounded in the given image. Multimodal large language models (MLLMs) may hallucinate details when conditioned solely by images (wrong color description in this example). Incorporating Wikipedia-derived visual information and taxon-tailored format examples as contexts helps generate accurate, image-specific captions. <b>Right</b>: Using these descriptive captions as additional supervision, BioCAP captures fine-grained biological semantics.
+      </figcaption>
+    </figure>
+
+    <h2 class="banded">BioCAP</h2>
+
+    <p>
+      Foundation models in biology have relied mainly on taxonomic labels. BioCAP introduces descriptive captions as complementary supervision, aligning visual and textual representations within the latent morphospace of species.
+    </p>
+    <p>
+      We curate and release <a href="https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions" target="_blank">TreeOfLife-10M-Captions</a>, 
+      a large-scale collection of synthetic, trait-rich captions generated by multimodal LLMs guided by Wikipedia context and taxon-specific examples. 
+      These captions provide accurate, instance-level descriptions at scale. 
+      The BioCAP model is evaluated on <a href="#evaluation">species classification</a> and <a href="#evaluation">text-image retrieval</a>. 
+      Training BioCAP with these captions improves performance by <b>+8.8%</b> on classification and <b>+21.3%</b> on retrieval, 
+      demonstrating that descriptive language enriches biological foundation models beyond labels.
+    </p>
+    <p>
+      <a href="#intrinsic">Further analysis</a> shows that BioCAP learns a more structured and interpretable representation space.
+      In the embedding space, BioCAP clearly separates species, sexes, and behavioral variants, while Grad-CAM visualizations reveal attention aligned with biologically meaningful traits, demonstrating that descriptive captions enhance both semantic structure and visual grounding.
+    </p>
+    <h3>Demo</h3>
+    <p>Coming Soon</p>
+
+    <h2 class="banded" id="evaluation">Experiments</h2>
+    <p>
+      We first evaluate BioCAP on species classification tasks.
+      We compared against <a href="https://huggingface.co/openai/clip-vit-base-patch16">CLIP</a> (ViT-B/16 pre-trained by openai),
+      <a href="https://huggingface.co/google/siglip-base-patch16-224">SigLIP</a> (ViT-B/16, 224px),
+      <a href="https://huggingface.co/BGLab/BioTrove-CLIP">BioTrove-CLIP</a> (ViT-B/16),
+      <a href="https://huggingface.co/qihoo360/fg-clip-base">FG-CLIP</a> (ViT-B/16),
+      and <a href="https://huggingface.co/imageomics/bioclip">BioCLIP</a> (ViT-B/16) on <i>zero-shot classification</i>.
+      Bold indicates the best performance for each task.
+    </p>
+    <p>
+      <b>BioCAP outperforms BioCLIP by 8.8% and provides a 21.6% improvement over the CLIP model used as weight initialization.</b>
+    </p>
+    <p><i>Scroll to see all results.</i></p>
+    <table cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th rowspan="2" class="sticky border-right">Model</th>
+          <th colspan="5" class="no-border-bottom border-right">Animals</th>
+          <th colspan="4" class="no-border-bottom border-right">Plants & Fungi</th>
+          <th rowspan="2" class="border-right">Rare Species</th>
+          <th rowspan="2">Mean</th>
+        </tr>
+        <tr>
+          <th class="no-border-top border-left">NABirds</th>
+          <th class="no-border-top">Plankton</th>
+          <th class="no-border-top">Insects</th>
+          <th class="no-border-top">Insects 2</th>
+          <th class="no-border-top border-right">Camera Trap</th>
+          <th class="no-border-top">PlantNet</th>
+          <th class="no-border-top">Fungi</th>
+          <th class="no-border-top">PlantVillage</th>
+          <th class="no-border-top border-right">Med. Leaf</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sticky border-right">CLIP (ViT-B/16)</td>
+          <td>39.0</td>
+          <td>3.3</td>
+          <td>7.4</td>
+          <td>9.3</td>
+          <td class="border-right">28.1</td>
+          <td>52.5</td>
+          <td>8.6</td>
+          <td>5.1</td>
+          <td class="border-right">15.0</td>
+          <td class="border-right">25.7</td>
+          <td>19.4</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right">SigLIP</td>
+          <td>50.2</td>
+          <td>3.7</td>
+          <td>17.6</td>
+          <td>9.6</td>
+          <td class="border-right">26.7</td>
+          <td>76.3</td>
+          <td>28.3</td>
+          <td>26.1</td>
+          <td class="border-right">45.4</td>
+          <td class="border-right">30.7</td>
+          <td>32.3</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right">FG-CLIP</td>
+          <td>48.3</td>
+          <td>1.9</td>
+          <td>6.9</td>
+          <td>9.3</td>
+          <td class="border-right">26.4</td>
+          <td>55.6</td>
+          <td>7.3</td>
+          <td>5.9</td>
+          <td class="border-right">15.7</td>
+          <td class="border-right">29.4</td>
+          <td>20.7</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right">BioTrove-CLIP</td>
+          <td>39.4</td>
+          <td>1.0</td>
+          <td>20.5</td>
+          <td>15.7</td>
+          <td class="border-right">10.7</td>
+          <td>64.4</td>
+          <td>38.2</td>
+          <td>15.7</td>
+          <td class="border-right">31.6</td>
+          <td class="border-right">24.6</td>
+          <td>26.2</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right">BioCLIP</td>
+          <td>58.8</td>
+          <td><b>6.1</b></td>
+          <td>34.9</td>
+          <td>20.5</td>
+          <td class="border-right">31.7</td>
+          <td>88.2</td>
+          <td>40.9</td>
+          <td>19.0</td>
+          <td class="border-right">38.5</td>
+          <td class="border-right">37.1</td>
+          <td>37.6</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right"><b>BioCAP (Ours)</b></td>
+          <td><b>67.6</b></td>
+          <td><b>7.2</b></td>
+          <td><b>41.9</b></td>
+          <td><b>23.7</b></td>
+          <td class="border-right"><b>37.4</b></td>
+          <td><b>93.6</b></td>
+          <td><b>64.4</b></td>
+          <td><b>33.0</b></td>
+          <td class="border-right"><b>51.4</b></td>
+          <td class="border-right"><b>44.2</b></td>
+          <td><b>46.4</b></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Beyond species classification, we evaluate BioCAP on a series of biological <b>retrieval tasks</b>.
+      These include <a href="https://github.com/inquire-benchmark/INQUIRE/" target="_blank">INQUIRE-Rerank</a>, 
+      as well as <a href="https://www.macaulaylibrary.org" target="_blank">Cornell Bird</a> 
+      and <a href="https://plantid.net/Home.aspx" target="_blank">PlantID</a>, 
+      two image-text retrieval benchmarks that we curated from paired biological observations.
+      Together, these datasets assess a model’s ability to retrieve and organize biologically relevant images based on descriptive queries.
+    </p>
+    <p>
+      <b>BioCAP achieves a +21.3% improvement in overall retrieval performance over BioCLIP and outperforms SigLIP by +13.1%, 
+      demonstrating stronger visual–language alignment.</b>
+    </p>
+    <table cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th rowspan="2" class="sticky border-right">Model</th>
+          <th colspan="4" class="no-border-bottom border-right">INQUIRE Rerank</th>
+          <th colspan="2" class="no-border-bottom border-right">Cornell Bird</th>
+          <th colspan="2" class="no-border-bottom border-right">PlantID</th>
+          <th rowspan="2" class="large-padding">Mean</th>
+        </tr>
+        <tr>
+          <th class="no-border-top border-left large-padding">Appear.</th>
+          <th class="no-border-top large-padding">Behav.</th>
+          <th class="no-border-top large-padding">Context</th>
+          <th class="no-border-top border-right large-padding">Species</th>
+          <th class="no-border-top large-padding">I2T</th>
+          <th class="no-border-top border-right large-padding">T2I</th>
+          <th class="no-border-top large-padding">I2T</th>
+          <th class="no-border-top border-right large-padding">T2I</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sticky border-right">CLIP (ViT-B/16)</td>
+          <td class="large-padding">30.8</td>
+          <td class="large-padding">32.9</td>
+          <td class="large-padding">37.2</td>
+          <td class="border-right large-padding">37.1</td>
+          <td class="large-padding">33.8</td>
+          <td class="large-padding">29.1</td>
+          <td class="large-padding">25.0</td>
+          <td class="border-right large-padding">22.1</td>
+          <td class="large-padding">31.0</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right">SigLIP</td>
+          <td class="large-padding">34.6</td>
+          <td class="large-padding"><b>37.2</b></td>
+          <td class="large-padding"><b>41.4</b></td>
+          <td class="border-right large-padding">36.2</td>
+          <td class="large-padding">47.7</td>
+          <td class="large-padding">50.2</td>
+          <td class="large-padding">42.1</td>
+          <td class="border-right large-padding">38.1</td>
+          <td class="large-padding">40.9</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right">FG-CLIP</td>
+          <td class="large-padding">28.8</td>
+          <td class="large-padding">31.1</td>
+          <td class="large-padding">32.5</td>
+          <td class="border-right large-padding">41.0</td>
+          <td class="large-padding">49.4</td>
+          <td class="large-padding">48.1</td>
+          <td class="large-padding">28.7</td>
+          <td class="border-right large-padding">27.4</td>
+          <td class="large-padding">35.9</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right">BioTrove-CLIP</td>
+          <td class="large-padding">28.5</td>
+          <td class="large-padding">22.2</td>
+          <td class="large-padding">30.5</td>
+          <td class="border-right large-padding">39.5</td>
+          <td class="large-padding">16.5</td>
+          <td class="large-padding">13.8</td>
+          <td class="large-padding">47.4</td>
+          <td class="border-right large-padding">50.1</td>
+          <td class="large-padding">31.1</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right">BioCLIP</td>
+          <td class="large-padding">27.4</td>
+          <td class="large-padding">27.2</td>
+          <td class="large-padding">30.8</td>
+          <td class="border-right large-padding">41.1</td>
+          <td class="large-padding">15.1</td>
+          <td class="large-padding">16.2</td>
+          <td class="large-padding">47.8</td>
+          <td class="border-right large-padding">45.0</td>
+          <td class="large-padding">31.3</td>
+        </tr>
+        <tr>
+          <td class="sticky border-right"><b>BioCAP (Ours)</b></td>
+          <td class="large-padding"><b>37.1</b></td>
+          <td class="large-padding">33.6</td>
+          <td class="large-padding">37.0</td>
+          <td class="border-right large-padding"><b>43.0</b></td>
+          <td class="large-padding"><b>54.0</b></td>
+          <td class="large-padding"><b>52.0</b></td>
+          <td class="large-padding"><b>81.4</b></td>
+          <td class="border-right large-padding"><b>83.0</b></td>
+          <td class="large-padding"><b>52.6</b></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="intrinsic" class="banded">Representation Analysis</h2>
+    <p>
+      Beyond instance-level understanding, we examine how BioCAP organizes relationships among individuals by visualizing 
+      the <i>t</i>-SNE embeddings of three bird species, annotated with both behaviors (<i>perch</i>, <i>fly</i>, <i>stand</i>) and sex (male, female/immature). 
+      General-purpose models such as CLIP and DINOv3 form loose species clusters and conflate sex distinctions, 
+      often aligning female or immature red-winged blackbirds with brown-headed cowbirds. 
+    </p>
+    
+    <p>
+      While BioCLIP learns to separate species, it fails to distinguish behavior variations. 
+      In contrast, <b>BioCAP</b> produces compact, well-structured clusters and clearly separates biological semantics across sex and behavior. 
+      These results highlight how descriptive captions enhance the model’s understanding of fine-grained biological concepts.
+    </p>
+    <figure>
+      <a href="images/t-SNE.pdf">
+        <img srcset="" src="images/t-SNE.svg" alt="" loading="lazy">
+      </a>
+      <figcaption>
+        Figure 2:   <b>Embedding distribution of three bird species</b> with sex and behavior annotations. 
+        Example images corresponding to each label are shown on the right. 
+        DINOv3 and CLIP fail to align male and female red-winged blackbirds while mixing male and female hummingbirds. 
+        <b>BioCLIP</b> does not capture semantic differences between behaviors. 
+        With the guidance of descriptive captions, <b>BioCAP</b> distinguishes subtle variations such as <i>perch</i> and <i>stand</i>, 
+        accurately separating behavior variants in the embedding space.
+      </figcaption>
+    </figure>
+    <p>
+      Why are captions helpful for classification?
+      To understand how BioCAP benefits from descriptive supervision, we visualize model attention using Grad-CAM, 
+      given species names and high-frequency biological traits mentioned in their captions.
+      The visualization reveals that BioCAP learns to localize biologically meaningful regions and associate them with the correct species.
+    </p>
+    
+    <figure>
+      <a href="images/gradcam.pdf">
+        <img srcset="" src="images/gradcam.svg" alt="" loading="lazy">
+      </a>
+      <figcaption>
+        Figure 3: <b>Grad-CAM visualizations of CLIP, BioCLIP, and BioCAP</b>, 
+        given <i>species names</i> and <i>biological concepts</i> frequently mentioned in their captions. 
+        Compared to other models, <b>BioCAP</b> provides a more comprehensive understanding of these concepts 
+        and correctly grounds them to the corresponding visual regions of each species.
+        Check out our <a href="">paper</a> for more visualizations.
+      </figcaption>
+    </figure>
+
+    <h2 class="banded" id="dataset">Dataset</h2>
+    <p>
+      <b>TreeOfLife-10M-Captions</b> extends the TreeOfLife-10M dataset by providing a descriptive caption for every image. 
+      Using multimodal large language models guided by Wikipedia-derived visual information and taxon-specific examples, 
+      we generate instance-level, trait-rich captions that accurately describe each organism’s visible characteristics. 
+      In addition to the captions, we also include the corresponding Wikipedia descriptions for all available taxa.
+    </p>
+    <p>
+      We train <b>BioCAP</b> on TreeOfLife-10M-Captions to align biological images with their textual descriptions, 
+      and release the pretrained weights publicly for downstream use in biological vision and multimodal learning research.
+    </p>
+
+    <h2>Reference</h2>
+    <p>Please cite our paper if you use our code, data, model or results.</p>
+    <pre class="reference">@article{zhang2025biocap,
+      title = {{B}io{CAP}}, 
+      author = {},
+      year = {2025},
+      eprint={},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={}, 
+    }</pre>
+    <p>Also consider citing OpenCLIP, PlantID, Cornell Bird, iNat21 and BIOSCAN-1M:</p>
+    <pre class="reference">@software{ilharco_gabriel_2021_5143773,
+  author={Ilharco, Gabriel and Wortsman, Mitchell and Wightman, Ross and Gordon, Cade and Carlini, Nicholas and Taori, Rohan and Dave, Achal and Shankar, Vaishaal and Namkoong, Hongseok and Miller, John and Hajishirzi, Hannaneh and Farhadi, Ali and Schmidt, Ludwig},
+  title={OpenCLIP},
+  year={2021},
+  doi={10.5281/zenodo.5143773},
+}</pre>
+<pre class="reference">@misc{plantid,
+  author       = {{Bruce Homer-Smith and contributors to PlantID.net}},
+  title        = {PlantID -- Online Plant Identification Resource},
+  year         = {2025},
+  url          = {https://plantid.net/},
+  note         = {Content licensed under CC BY-NC 3.0. Developed and produced by Bruce Homer-Smith with contributions from Dave Long, Doreen Smith, Kristin Jakob, John Malpas, and others.}
+}</pre>
+<pre class="reference">@misc{macaulay2025,
+  author       = {{Macaulay Library, Cornell Lab of Ornithology}},
+  title        = {Macaulay Library: Multimedia Resources for Birds and Other Animals},
+  year         = {2025},
+  url          = {https://www.macaulaylibrary.org},
+}</pre>
+    <pre class="reference">@misc{inat2021,
+  author={Van Horn, Grant and Mac Aodha, Oisin},
+  title={iNat Challenge 2021 - FGVC8},
+  publisher={Kaggle},
+  year={2021},
+  url={https://kaggle.com/competitions/inaturalist-2021}
+}</pre>
+    <pre class="reference">@inproceedings{gharaee2023step,
+  author={Gharaee, Z. and Gong, Z. and Pellegrino, N. and Zarubiieva, I. and Haurum, J. B. and Lowe, S. C. and McKeown, J. T. A. and Ho, C. Y. and McLeod, J. and Wei, Y. C. and Agda, J. and Ratnasingham, S. and Steinke, D. and Chang, A. X. and Taylor, G. W. and Fieguth, P.},
+  title={A Step Towards Worldwide Biodiversity Assessment: The {BIOSCAN-1M} Insect Dataset},
+  booktitle={Advances in Neural Information Processing Systems ({NeurIPS}) Datasets \& Benchmarks Track},
+  year={2023},
+}</pre>
+
+    <h2 class="banded">Acknowledgements</h2>
+    <p>
+      We would like to thank Wasila Dahdul, Zhiyuan Tao, Yifan Liu, Fangxun Liu, Shuheng Wang, Ziqi Li, David Carlyn, Quang-Huy Nguyen, Yintie Lei, Junke Yang for their help with the human evaluation,and <a href="https://imageomics.osu.edu/about/team">Imageomics Team</a> members for their constructive feedback.
+    </p>
+    <p>
+      We sincerely thank <a href="https://plantid.net/Home.aspx" target="_blank">PlantID</a> and its contributors, 
+      as well as the <a href="https://www.macaulaylibrary.org" target="_blank">Cornell Lab of Ornithology</a> for providing access to their invaluable biological media collections. 
+      The paired image–text data from PlantID and the Cornell Bird Macaulay Library made our retrieval evaluation possible. 
+    </p>
+    <p>
+      Our research is supported by NSF OAC 2118240 and resources from the Ohio Supercomputer Center.
+      Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
+    </p>
+
+  </main>
+  <script>
+    const details = document.querySelector("details");
+    document.addEventListener("click", function (e) {
+      if (!details.contains(e.target)) {
+        details.removeAttribute("open");
+      }
+    });
+  </script>
+</body>
+
+</html>
