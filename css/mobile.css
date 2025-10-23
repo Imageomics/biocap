@@ -102,7 +102,6 @@ pre.reference {
   Helpers
 ***************/
 
-
 .no-border-top {
   border-top: 0;
 }
@@ -189,7 +188,6 @@ figcaption {
   align-items:center;
   padding:0.5em 1em;
   margin-top: 0.2em;
-  margin-bottom: 0.2em;
 }
 
 .pill-button > span {

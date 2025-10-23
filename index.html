@@ -44,22 +44,18 @@
     </div>
     <h1>BioCAP: Exploiting Synthetic Captions Beyond Labels in Biological Foundation Models</h1>
     <p class="centered">
-      <span class="authors-line">
-        <sup>1</sup><a href="https://link7808.github.io">Ziheng Zhang</a>,
-        <sup>1</sup><a href="https://openreview.net/profile?id=~Xinyue_Ma5">Xinyue Ma</a>,
-        <sup>1</sup><a href="https://arpita-chowdhury-osu.github.io">Arpita Chowdhury</a>,
-        <sup>1</sup><a href="https://egrace479.github.io/">Elizabeth G Campolongo</a>,
-        <sup>1</sup><a href="https://www.linkedin.com/in/thompson-m-j/">Matthew J Thompson</a>,
-        <sup>1</sup><a href="https://www.linkedin.com/in/net-zhang/">Net Zhang</a>,
-      </span><br>
-      <span class="authors-line">
-        <sup>1</sup><a href="https://samuelstevens.me/">Samuel Stevens</a>,
-        <sup>2</sup><a href="https://scholars.duke.edu/person/Hilmar.Lapp/research">Hilmar Lapp</a>,
-        <sup>1</sup><a href="https://cse.osu.edu/people/berger-wolf.1">Tanya Berger-Wolf</a>,
-        <sup>1</sup><a href="https://ysu1989.github.io/">Yu Su</a>,
-        <sup>1</sup><a href="https://sites.google.com/view/wei-lun-harry-chao">Wei-Lun (Harry) Chao</a>,
-        <sup>1</sup><a href="https://vimar-gu.github.io/">Jianyang Gu</a>
-      </span>
+      <sup>1</sup><a href="https://link7808.github.io">Ziheng Zhang</a>,
+      <sup>1</sup><a href="https://openreview.net/profile?id=~Xinyue_Ma5">Xinyue Ma</a>,
+      <sup>1</sup><a href="https://arpita-chowdhury-osu.github.io">Arpita Chowdhury</a>,
+      <sup>1</sup><a href="https://egrace479.github.io/">Elizabeth G Campolongo</a>,
+      <sup>1</sup><a href="https://www.linkedin.com/in/thompson-m-j/">Matthew J Thompson</a>,
+      <sup>1</sup><a href="https://www.linkedin.com/in/net-zhang/">Net Zhang</a>,
+      <sup>1</sup><a href="https://samuelstevens.me/">Samuel Stevens</a>,
+      <sup>2</sup><a href="https://scholars.duke.edu/person/Hilmar.Lapp/research">Hilmar Lapp</a>,
+      <sup>1</sup><a href="https://cse.osu.edu/people/berger-wolf.1">Tanya Berger-Wolf</a>,
+      <sup>1</sup><a href="https://ysu1989.github.io/">Yu Su</a>,
+      <sup>1</sup><a href="https://sites.google.com/view/wei-lun-harry-chao">Wei-Lun (Harry) Chao</a>,
+      <sup>1</sup><a href="https://vimar-gu.github.io/">Jianyang Gu</a>
     </p>
     <p class="centered">
       <sup>1</sup>The Ohio State University,
@@ -71,23 +67,22 @@
     </p>
 
     <p class="centered">
-      <a class="pill-button" href="https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions">
+      <a class="pill-button wide" href="https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions">
         <img src="images/icons/huggingface.svg" /> Data
-      <a class="pill-button" href="https://huggingface.co/imageomics/biocap">
+      <a class="pill-button wide" href="https://huggingface.co/imageomics/biocap">
         <img src="images/icons/huggingface.svg" /> Model
       </a>
-      <a class="pill-button" href="https://huggingface.co/spaces/imageomics/biocap-demo">
+      <a class="pill-button wide" href="https://huggingface.co/spaces/imageomics/biocap-demo">
         <img src="images/icons/huggingface.svg" /> Demo (Coming Soon)
-      </a>
-      <a class="pill-button" href="">
-        <img src="images/icons/arxiv.svg" /> Paper
       </a>
     </p>
     <p class="centered">
+      <a class="pill-button wide" href="">
+        <img src="images/icons/arxiv.svg" /> Paper
+      </a>
       <a class="pill-button wide" href="https://github.com/Imageomics/biocap">
         <img src="images/icons/github.svg" /> BioCAP Code
       </a>
-
     </p>
     <figure>
       <a href="images/teaser.pdf">
@@ -213,7 +208,7 @@
         <tr>
           <td class="sticky border-right">BioCLIP</td>
           <td>58.8</td>
-          <td><b>6.1</b></td>
+          <td>6.1</td>
           <td>34.9</td>
           <td>20.5</td>
           <td class="border-right">31.7</td>
@@ -402,21 +397,29 @@
       In addition to the captions, we also include the corresponding Wikipedia descriptions for all available taxa.
     </p>
     <p>
-      We train <b>BioCAP</b> on TreeOfLife-10M-Captions to align biological images with their textual descriptions, 
+      We train <b>BioCAP</b> on the TreeOfLife-10M dataset with our new TreeOfLife-10M-Captions to align biological images with textual descriptions, 
       and release the pretrained weights publicly for downstream use in biological vision and multimodal learning research.
     </p>
 
     <h2>Reference</h2>
-    <p>Please cite our paper if you use our code, data, model or results.</p>
+    <p>Please cite our paper and associated artifact(s) if you use our code, data, model or results.</p>
     <pre class="reference">@article{zhang2025biocap,
       title = {{B}io{CAP}}, 
-      author = {},
+      author = {Ziheng Zhang and Xinyue Ma and Arpita Chowdhury and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Samuel Stevens and Hilmar Lapp and Tanya Berger-Wolf and Yu Su and Wei-Lun (Harry) Chao and Jianyang Gu},
       year = {2025},
       eprint={},
       archivePrefix={arXiv},
       primaryClass={cs.CV},
       url={}, 
     }</pre>
+    <pre class="reference">@dataset{treeoflife_10m_captions,
+      title = {{T}ree{O}f{L}ife-10{M}-{C}aptions}, 
+      author = {Ziheng Zhang and Xinyue Ma and Arpita Chowdhury and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Samuel Stevens and Hilmar Lapp and Tanya Berger-Wolf and Yu Su and Wei-Lun (Harry) Chao and Jianyang Gu},
+      year = {2025},
+      url = {https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions},
+      doi = {},
+      publisher = {Hugging Face}
+}</pre>
     <p>Also consider citing OpenCLIP, PlantID, Cornell Bird, iNat21 and BIOSCAN-1M:</p>
     <pre class="reference">@software{ilharco_gabriel_2021_5143773,
   author={Ilharco, Gabriel and Wortsman, Mitchell and Wightman, Ross and Gordon, Cade and Carlini, Nicholas and Taori, Rohan and Dave, Achal and Shankar, Vaishaal and Namkoong, Hongseok and Miller, John and Hajishirzi, Hannaneh and Farhadi, Ali and Schmidt, Ludwig},
