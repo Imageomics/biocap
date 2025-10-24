@@ -26,7 +26,7 @@
         }
     ],
     "description": "This work investigates descriptive captions as an additional source of supervision for biological multimodal foundation models. Images and captions can be viewed as complementary samples from the latent morphospace of a species, each capturing certain biological traits. Incorporating captions during training encourages alignment with this shared latent structure, emphasizing potentially diagnostic characters while suppressing spurious correlations. The main challenge, however, lies in obtaining faithful, instance-specific captions at scale. This requirement has limited the utilization of natural language supervision in organismal biology  compared with many other scientific domains. We complement this gap by generating synthetic captions with multimodal large language models (MLLMs), guided by Wikipedia-derived visual information and taxon-tailored format examples.  These domain-specific contexts help reduce hallucination and yield accurate, instance-based descriptive captions. Using these captions, we train BioCAP (i.e., BioCLIP with Captions), a biological foundation model that captures rich semantics  and achieves strong performance in species classification and text-image retrieval. These results demonstrate the value of descriptive captions beyond labels in bridging biological images with multimodal foundation models.",
-    "notes": "<p>If you use this software, please cite both the article and the software itself.</p>\n<p>&nbsp;</p>\n<p>Article citation:</p>\n<p><code>@article{zhang2025biocap,</code><br><code>&nbsp; title = {{B}io{CAP}: Exploiting Synthetic Captions Beyond Labels in Biological Foundation Models},&nbsp;</code><br><code>&nbsp; author = {Ziheng Zhang and Xinyue Ma and Arpita Chowdhury and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Samuel Stevens and Hilmar Lapp and Tanya Berger-Wolf and Yu Su and Wei-Lun Chao and Jianyang Gu},</code><br><code>&nbsp; year = {2025},</code><br><code>&nbsp; eprint={XX},</code><br><code>&nbsp; archivePrefix={arXiv},</code><br><code>&nbsp; primaryClass={cs.CV},</code><br><code>&nbsp; url={https://arxiv.org/abs/ XX},&nbsp;</code><br><code>}</code></p>",
+    "notes": "<p>If you use this software, please cite both the article and the software itself.</p>\n<p>&nbsp;</p>\n<p>Article citation:</p>\n<p><code>@article{zhang2025biocap,</code><br><code>&nbsp; title = {{B}io{CAP}: Exploiting Synthetic Captions Beyond Labels in Biological Foundation Models},&nbsp;</code><br><code>&nbsp; author = {Ziheng Zhang and Xinyue Ma and Arpita Chowdhury and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Samuel Stevens and Hilmar Lapp and Tanya Berger-Wolf and Yu Su and Wei-Lun Chao and Jianyang Gu},</code><br><code>&nbsp; year = {2025},</code><br><code>&nbsp; eprint={2510.20095},</code><br><code>&nbsp; archivePrefix={arXiv},</code><br><code>&nbsp; primaryClass={cs.CV},</code><br><code>&nbsp; url={https://arxiv.org/abs/2510.20095},&nbsp;</code><br><code>}</code></p>",
     "keywords": [
         "clip",
         "biology",
@@ -49,7 +49,7 @@
     "license": {
         "id": "MIT"
     },
-    "publication_date": "2025-10-XX",
+    "publication_date": "2025-10-24",
     "title": "BioCAP",
     "version": "1.0.0",
     "grants": [
@@ -64,7 +64,7 @@
     ],
     "related_identifiers": [
         {
-        "identifier": "10.48550/arXiv: XX",
+        "identifier": "10.48550/arXiv.2510.20095",
         "relation": "isSupplementTo",
         "resource_type": "publication-preprint"
         }

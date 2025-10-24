@@ -30,7 +30,7 @@ authors:
   - family-names: Gu
     given-names: Jianyang
 cff-version: 1.2.0
-date-released: "2025-10-XX" # update before release
+date-released: "2025-10-24"
 identifiers:
   - doi: "" # Add on release
   - description: "The GitHub release URL of tag v1.0.0."
