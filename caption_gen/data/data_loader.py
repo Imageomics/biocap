@@ -1,64 +1,70 @@
-import csv
 import pandas as pd
 from typing import Dict
-from caption_gen.utils.text_utils import normalize_species_name, reduce_to_binomial
 
 
 def load_wiki_captions(parquet_path: str) -> Dict[str, str]:
+    """Load UUID to description mapping from parquet file.
+
+    Args:
+        parquet_path: Path to parquet file with columns: [uuid, caption, description]
+
+    Returns:
+        Dictionary mapping UUID to description text (only non-empty descriptions)
+    """
     lookup: Dict[str, str] = {}
     df = pd.read_parquet(parquet_path)
 
-    species_col = None
-    caption_col = None
-
-    for col in df.columns:
-        col_lower = col.lower()
-        if 'species' in col_lower or 'name' in col_lower:
-            species_col = col
-        elif 'caption' in col_lower or 'text' in col_lower or 'description' in col_lower:
-            caption_col = col
-
-    if species_col is None or caption_col is None:
-        if len(df.columns) >= 2:
-            species_col = df.columns[0]
-            caption_col = df.columns[-1]
-        else:
-            raise ValueError("Could not identify species and caption columns")
+    # Expected columns: [uuid, caption, description]
+    # We use columns 0 (uuid) and 2 (description)
+    uuid_col = df.columns[0]  # 'uuid'
+    desc_col = df.columns[2]  # 'description'
 
     for _, row in df.iterrows():
-        species = str(row[species_col]).strip()
-        caption = str(row[caption_col]).strip()
+        uuid = str(row[uuid_col]).strip()
+        description = row[desc_col]
 
-        if not species or not caption or pd.isna(row[species_col]) or pd.isna(row[caption_col]):
+        # Skip if UUID is empty or description is None/NaN/empty
+        if not uuid or pd.isna(description) or not str(description).strip():
             continue
 
-        key_full = normalize_species_name(species)
-        key_binom = reduce_to_binomial(species)
-        if key_full and key_full not in lookup:
-            lookup[key_full] = caption
-        if key_binom and key_binom not in lookup:
-            lookup[key_binom] = caption
+        lookup[uuid] = str(description).strip()
 
     return lookup
 
 
-def find_wiki_caption(scientific_name: str, wiki_lookup: Dict[str, str]) -> str:
-    if not scientific_name:
+def find_wiki_caption_by_uuid(uuid: str, wiki_lookup: Dict[str, str]) -> str:
+    """Find description by UUID. Direct O(1) lookup.
+
+    Args:
+        uuid: The UUID key from the sample
+        wiki_lookup: Dictionary mapping UUID to description
+
+    Returns:
+        Description text if found, empty string otherwise
+    """
+    if not uuid:
         return ""
-    key_full = normalize_species_name(scientific_name)
-    if key_full in wiki_lookup:
-        return wiki_lookup[key_full]
-    key_binom = reduce_to_binomial(scientific_name)
-    return wiki_lookup.get(key_binom, "")
+    return wiki_lookup.get(uuid, "")
 
 
-def load_class_examples(csv_path: str) -> Dict[str, Dict[str, str]]:
+def load_class_examples(parquet_path: str) -> Dict[str, Dict[str, str]]:
+    """Load class-specific examples from parquet file.
+
+    Args:
+        parquet_path: Path to parquet file with columns: [class, description]
+
+    Returns:
+        Dictionary mapping class name (lowercase) to description
+    """
     class_mapping = {}
-    with open(csv_path, newline='', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            key = row["class"].strip().lower()
+    df = pd.read_parquet(parquet_path)
+
+    for _, row in df.iterrows():
+        key = str(row["class"]).strip().lower()
+        description = str(row.get("description", "")).strip()
+        if key and description:
             class_mapping[key] = {
-                'description': row.get("description", "").strip()
+                'description': description
             }
+
     return class_mapping

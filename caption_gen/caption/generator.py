@@ -6,7 +6,7 @@ from typing import Dict, Optional
 from vllm import LLM, SamplingParams
 
 from caption_gen.utils.text_utils import safe_get_text, extract_class_from_taxon
-from caption_gen.data.data_loader import find_wiki_caption
+from caption_gen.data.data_loader import find_wiki_caption_by_uuid
 from caption_gen.caption.prompts import build_prompt
 
 
@@ -61,13 +61,16 @@ def update_single_tar_with_captions(
                     sink.write(sample)
                     continue
 
+                # Get UUID from __key__
+                uuid = sample.get("__key__", "")
+
                 species_name = safe_get_text(sample, "common_name.txt")
                 if not species_name:
                     species_name = safe_get_text(sample, "scientific_name.txt")
                 if not species_name:
                     species_name = safe_get_text(sample, "taxonomic_name.txt")
 
-                # Scientific name for wiki lookup
+                # Scientific name for display in prompt
                 scientific_name = safe_get_text(sample, "scientific_name.txt") or safe_get_text(sample, "taxonomic_name.txt")
 
                 # Extract class from taxonomy for prompt templates and examples
@@ -76,9 +79,10 @@ def update_single_tar_with_captions(
 
                 class_info = class_mapping.get(extracted_class.lower(), {})
 
+                # UUID-based wiki lookup
                 wiki_excerpt = ""
-                if wiki_lookup:
-                    wiki_text = find_wiki_caption(scientific_name, wiki_lookup)
+                if wiki_lookup and uuid:
+                    wiki_text = find_wiki_caption_by_uuid(uuid, wiki_lookup)
                     if wiki_text:
                         wiki_excerpt = wiki_text[:max(0, int(max_wiki_chars))]
 

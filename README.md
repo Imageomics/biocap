@@ -3,7 +3,7 @@
 This repository contains the code for [BioCAP](https://huggingface.co/imageomics/biocap) training, evaluation, caption generation, and Wikipedia scraper. We developed this repository based on [BioCLIP](https://github.com/imageomics/BioCLIP) and [OpenCLIP](https://github.com/mlfoundations/open_clip).
 BioCAP is trained on the [TreeOfLife-10M dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) paired with a new [TreeOfLife-10M Captions dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions), curated for this model. The BioCAP website is hosted from the `gh-pages` branch of this repository.
 
-[Paper]() | [Model](https://huggingface.co/imageomics/biocap) | [Data](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions) | [Demo]()
+[Paper](https://arxiv.org/abs/2510.20095) | [Model](https://huggingface.co/imageomics/biocap) | [Data](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions) | [Demo](https://huggingface.co/spaces/imageomics/biocap-demo)
 ---
 
 BioCAP is a CLIP model trained on the 10M-image dataset with both taxonomic labels and fine-grained synthetic captions. BioCAP achieves strong performance on biology-related tasks, including zero-shot classification and text-image retrieval.
@@ -74,7 +74,7 @@ sbatch slurm/eval_retrieval.sh
 
 
 
-We use [vLLM](https://github.com/vllm-project/vllm) with [InternVL-3-38B](https://huggingface.co/OpenGVLab/InternVL3-38B-AWQ) to generate fine-grained captions for images. The caption generation process enriches species images with detailed descriptions of visual traits and characteristics. With Wikipedia-derived visual information and taxon-tailored format examples as domain-specific contexts from [`data/wiki_and_format_example/`](data/wiki_and_format_example/), the model generates biologically accurate and descriptive captions.
+We use [vLLM](https://github.com/vllm-project/vllm) with [InternVL-3-38B](https://huggingface.co/OpenGVLab/InternVL3-38B-AWQ) to generate fine-grained captions for images. The caption generation process enriches species images with detailed descriptions of visual traits and characteristics. The domain-specific contexts, including Wikipedia-derived visual information and taxon-tailored format examples, are obtained from the [TreeOfLife-10M dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions) and should be downloaded and placed under [`data/wiki_and_format_example/`](data/wiki_and_format_example/) before running the generation scripts.
 
 To generate captions, configure the paths in `slurm/run_caption_gen.sh`, then run:
 ```bash
@@ -94,7 +94,7 @@ Note that Wikipedia is not versioned, so this process is not perfectly reproduci
 
 <h2 id="paper">Paper, Website, and Data</h2>
 
-We have a preprint on [arXiv]() and a [project website](https://imageomics.github.io/biocap/).
+We have a preprint on [arXiv](https://arxiv.org/abs/2510.20095) and a [project website](https://imageomics.github.io/biocap/).
 
 Our data is published on Hugging Face: [TreeOfLife-10M-Captions](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions), as is the existing [TreeOfLife-10M](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) to which the captions are applied (this is the source of the images and their associated taxonomic ranks).
 
@@ -103,15 +103,16 @@ Our data is published on Hugging Face: [TreeOfLife-10M-Captions](https://hugging
 Please cite our papers and the associated repositories if you use our code or results.
 
 ```
-@article{<code>,
-  title = {{B}io{CAP}}, 
-  author = {},
-  year = {2025},
-  eprint={},
+@article{zhang2025biocap,
+  title    = {Bio{CAP}: Exploiting Synthetic Captions Beyond Labels in Biological Foundation Models},
+  author   = {Ziheng Zhang and Xinyue Ma and Arpita Chowdhury and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Samuel Stevens and Hilmar Lapp and Tanya Berger-Wolf and Yu Su and Wei-Lun Chao and Jianyang Gu},
+  year     = {2025},
+  eprint   = {2510.20095},
   archivePrefix={arXiv},
   primaryClass={cs.CV},
-  url={}, 
+  url={https://arxiv.org/abs/2510.20095}
 }
+
  ```
 
 Our code (this repository):

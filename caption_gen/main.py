@@ -95,9 +95,9 @@ def main():
     parser.add_argument("--temperature", type=float, default=0.6, help="Sampling temperature.")
     parser.add_argument("--top_p", type=float, default=0.8, help="Top-p sampling parameter.")
     parser.add_argument("--max_tokens", type=int, default=50, help="Maximum tokens to generate.")
-    parser.add_argument("--format_examples", type=str, default="path/to/format_examples.csv", help="Path to CSV file containing class-specific prompt templates and examples.")
+    parser.add_argument("--format_examples", type=str, default="path/to/format_examples.parquet", help="Parquet file containing class-specific format examples.")
     parser.add_argument("--quantization", type=str, default="awq", help="Quantization method for vLLM (e.g., 'awq', 'gptq'). Use empty string or 'none' to disable.")
-    parser.add_argument("--wiki_data", type=str, default="path/to/data/annotations/wikipedia.parquet", help="Parquet file with species names and captions (Wikipedia excerpt).")
+    parser.add_argument("--wiki_data", type=str, default="path/to/uuid_caption_description.parquet", help="Parquet file for UUID-based wiki lookup.")
     parser.add_argument("--max_wiki_chars", type=int, default=600, help="Max number of characters from the wiki excerpt to include in the prompt.")
 
     args = parser.parse_args()
