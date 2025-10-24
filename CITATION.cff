@@ -32,13 +32,13 @@ authors:
 cff-version: 1.2.0
 date-released: "2025-10-24"
 identifiers:
-  - doi: "" # Add on release
+  - doi: "10.5281/zenodo.17437591"
   - description: "The GitHub release URL of tag v1.0.0."
     type: url
     value: "https://github.com/Imageomics/biocap/releases/tag/v1.0.0"
   - description: "The GitHub URL of the commit tagged with v1.0.0."
     type: url
-    value: "https://github.com/Imageomics/biocap/tree/<commit-hash>" # update on release
+    value: "https://github.com/Imageomics/biocap/tree/32ddb13fc60a80273ae3cf1ddce72113f0cd0f14"
 keywords:
   - clip
   - biology
