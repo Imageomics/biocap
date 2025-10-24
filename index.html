@@ -77,7 +77,7 @@
       </a>
     </p>
     <p class="centered">
-      <a class="pill-button wide" href="">
+      <a class="pill-button wide" href="https://arxiv.org/abs/2510.20095">
         <img src="images/icons/arxiv.svg" /> Paper
       </a>
       <a class="pill-button wide" href="https://github.com/Imageomics/biocap">
@@ -385,7 +385,7 @@
         given <i>species names</i> and <i>biological concepts</i> frequently mentioned in their captions. 
         Compared to other models, <b>BioCAP</b> provides a more comprehensive understanding of these concepts 
         and correctly grounds them to the corresponding visual regions of each species.
-        Check out our <a href="">paper</a> for more visualizations.
+        Check out our <a href="https://arxiv.org/abs/2510.20095">paper</a> for more visualizations.
       </figcaption>
     </figure>
 
@@ -407,20 +407,30 @@
       title = {{B}io{CAP}}, 
       author = {Ziheng Zhang and Xinyue Ma and Arpita Chowdhury and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Samuel Stevens and Hilmar Lapp and Tanya Berger-Wolf and Yu Su and Wei-Lun (Harry) Chao and Jianyang Gu},
       year = {2025},
-      eprint={},
+      eprint={2510.20095},
       archivePrefix={arXiv},
       primaryClass={cs.CV},
-      url={}, 
+      url={https://arxiv.org/abs/2510.20095}, 
     }</pre>
     <pre class="reference">@dataset{treeoflife_10m_captions,
       title = {{T}ree{O}f{L}ife-10{M}-{C}aptions}, 
       author = {Ziheng Zhang and Xinyue Ma and Arpita Chowdhury and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Samuel Stevens and Hilmar Lapp and Tanya Berger-Wolf and Yu Su and Wei-Lun (Harry) Chao and Jianyang Gu},
       year = {2025},
       url = {https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions},
-      doi = {},
+      doi = {10.57967/hf/6793},
       publisher = {Hugging Face}
 }</pre>
-    <p>Also consider citing OpenCLIP, PlantID, Cornell Bird, iNat21 and BIOSCAN-1M:</p>
+<pre class="reference">@software{Zhang_BioCAP_model,
+  author = {Ziheng Zhang and Xinyue Ma and Arpita Chowdhury and Elizabeth G Campolongo and Matthew J Thompson and Net Zhang and Samuel Stevens and Hilmar Lapp and Tanya Berger-Wolf and Yu Su and Wei-Lun Chao and Jianyang Gu},
+  license = {MIT},
+  title = {{BioCAP}},
+  url = {https://huggingface.co/imageomics/biocap},
+  version = {1.0.0},
+  doi = {10.57967/hf/6794},
+  publisher = {Hugging Face},
+  year = {2025}
+}</pre>
+    <p>Also consider citing OpenCLIP, PlantID, Cornell Bird, INQURE, iNat21 and BIOSCAN-1M:</p>
     <pre class="reference">@software{ilharco_gabriel_2021_5143773,
   author={Ilharco, Gabriel and Wortsman, Mitchell and Wightman, Ross and Gordon, Cade and Carlini, Nicholas and Taori, Rohan and Dave, Achal and Shankar, Vaishaal and Namkoong, Hongseok and Miller, John and Hajishirzi, Hannaneh and Farhadi, Ali and Schmidt, Ludwig},
   title={OpenCLIP},
@@ -439,6 +449,12 @@
   title        = {Macaulay Library: Multimedia Resources for Birds and Other Animals},
   year         = {2025},
   url          = {https://www.macaulaylibrary.org},
+}</pre>
+<pre class="reference">@article{vendrow2024inquire,
+  title={INQUIRE: A Natural World Text-to-Image Retrieval Benchmark},
+  author={Vendrow, Edward and Pantazis, Omiros and Shepard, Alexander and Brostow, Gabriel and Jones, Kate E and Mac Aodha, Oisin and Beery, Sara and Van Horn, Grant},
+  journal={NeurIPS},
+  year={2024},
 }</pre>
     <pre class="reference">@misc{inat2021,
   author={Van Horn, Grant and Mac Aodha, Oisin},
