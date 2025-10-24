@@ -1,4 +1,4 @@
-# BioCAP
+# BioCAP [![DOI](https://zenodo.org/badge/1072516166.svg)](https://doi.org/10.5281/zenodo.17437591)
 
 This repository contains the code for [BioCAP](https://huggingface.co/imageomics/biocap) training, evaluation, caption generation, and Wikipedia scraper. We developed this repository based on [BioCLIP](https://github.com/imageomics/BioCLIP) and [OpenCLIP](https://github.com/mlfoundations/open_clip).
 BioCAP is trained on the [TreeOfLife-10M dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M) paired with a new [TreeOfLife-10M Captions dataset](https://huggingface.co/datasets/imageomics/TreeOfLife-10M-Captions), curated for this model. The BioCAP website is hosted from the `gh-pages` branch of this repository.
@@ -118,8 +118,8 @@ Please cite our papers and the associated repositories if you use our code or re
 Our code (this repository):
 ```
 @software{biocapcode,
-  author = {Ziheng Zhang and Xinyue Ma and Elizabeth G.  Campolongo and Matthew J. Thompson and Net Zhang and Jianyang Gu},
-  doi = {},
+  author = {Ziheng Zhang and Xinyue Ma and Elizabeth G. Campolongo and Matthew J. Thompson and Net Zhang and Jianyang Gu},
+  doi = {10.5281/zenodo.17437591},
   title = {{B}io{CAP}},
   version = {1.0.0},
   month = {oct},
