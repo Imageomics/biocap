@@ -139,6 +139,60 @@ class ClipLoss(nn.Module):
         return {"contrastive_loss": total_loss} if output_dict else total_loss
 
 
+class DualProjectorClipLoss(ClipLoss):
+    """
+    Loss function for dual projector CLIP model that can handle both taxonomic and caption features.
+    Uses either taxonomic or caption features based on is_caption flag.
+    """
+    def __init__(
+            self,
+            local_loss=False,
+            gather_with_grad=False,
+            cache_labels=False,
+            rank=0,
+            world_size=1,
+            use_horovod=False,
+    ):
+        super().__init__(
+            local_loss=local_loss,
+            gather_with_grad=gather_with_grad,
+            cache_labels=cache_labels,
+            rank=rank,
+            world_size=world_size,
+            use_horovod=use_horovod,
+        )
+
+    def forward(
+            self, 
+            image_features_tax, 
+            image_features_caption, 
+            text_features, 
+            logit_scale, 
+            logit_scale_caption=None,
+            is_caption=False,
+            output_dict=False
+    ):
+        device = text_features.device
+        
+        # Use appropriate image features and logit scale based on label type
+        if is_caption:
+            image_features = image_features_caption
+            current_logit_scale = logit_scale_caption if logit_scale_caption is not None else logit_scale
+            loss_type = "caption_loss"
+        else:
+            image_features = image_features_tax
+            current_logit_scale = logit_scale
+            loss_type = "taxonomic_loss"
+            
+        logits_per_image, logits_per_text = self.get_logits(image_features, text_features, current_logit_scale)
+        labels = self.get_ground_truth(device, logits_per_image.shape[0])
+        
+        total_loss = (
+            F.cross_entropy(logits_per_image, labels) +
+            F.cross_entropy(logits_per_text, labels)
+        ) / 2
+        
+        return {loss_type: total_loss, "contrastive_loss": total_loss} if output_dict else total_loss
 
 
 class CoCaLoss(ClipLoss):

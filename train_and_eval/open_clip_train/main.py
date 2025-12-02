@@ -219,8 +219,6 @@ def main(args):
     if args.siglip:
         model_kwargs['init_logit_scale'] = np.log(10)  # different from CLIP
         model_kwargs['init_logit_bias'] = -10
-    if args.dual_projector:
-        model_kwargs['vision_cfg'] = {'dual_projector': True}
     model, preprocess_train, preprocess_val = create_model_and_transforms(
         args.model,
         args.pretrained,

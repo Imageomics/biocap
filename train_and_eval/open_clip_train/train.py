@@ -124,36 +124,15 @@ def train_one_epoch(model, data, loss, epoch, optimizer, scaler, scheduler, dist
                 model_out = model(images, texts)
                 logit_scale = model_out["logit_scale"]
                 logit_scale_caption = model_out.get("logit_scale_caption", logit_scale)
-
-                # Select appropriate features based on text type
-                if is_caption:
-                    image_features = model_out["image_features_caption"]
-                    current_logit_scale = logit_scale_caption
-                else:
-                    image_features = model_out["image_features_tax"]
-                    current_logit_scale = logit_scale
-
-                text_features = model_out["text_features"]
-
+                
+                # Add is_caption flag for the loss function
+                model_out["is_caption"] = is_caption
+                
                 if args.distill:
                     with torch.no_grad():
                         dist_model_out = dist_model(images, texts)
-                    losses = loss(
-                        image_features=image_features,
-                        text_features=text_features,
-                        logit_scale=current_logit_scale,
-                        dist_image_features=dist_model_out["image_features"],
-                        dist_text_features=dist_model_out["text_features"],
-                        dist_logit_scale=dist_model_out["logit_scale"],
-                        output_dict=True
-                    )
-                else:
-                    losses = loss(
-                        image_features=image_features,
-                        text_features=text_features,
-                        logit_scale=current_logit_scale,
-                        output_dict=True
-                    )
+                    model_out.update({f'dist_{k}' : v for k, v in dist_model_out.items()})
+                losses = loss(**model_out, output_dict=True)
 
                 total_loss = sum(losses.values())
                 losses["loss"] = total_loss
@@ -190,35 +169,20 @@ def train_one_epoch(model, data, loss, epoch, optimizer, scaler, scheduler, dist
                 texts = accum_texts[j]
                 with autocast():
                     model_out = model(images, texts)
-                    logit_scale = model_out["logit_scale"]
-                    logit_scale_caption = model_out.get("logit_scale_caption", logit_scale)
-
-                    # Select appropriate features based on text type
-                    if is_caption:
-                        image_features_key = "image_features_caption"
-                        current_logit_scale = logit_scale_caption
-                    else:
-                        image_features_key = "image_features_tax"
-                        current_logit_scale = logit_scale
-
-                    # Concatenate accumulated features
-                    accumulated_image = accum_features[image_features_key]
-                    all_image_features = torch.cat(
-                        accumulated_image[:j] + [model_out[image_features_key]] + accumulated_image[j + 1:]
-                    )
-
-                    accumulated_text = accum_features["text_features"]
-                    all_text_features = torch.cat(
-                        accumulated_text[:j] + [model_out["text_features"]] + accumulated_text[j + 1:]
-                    )
-
-                    losses = loss(
-                        image_features=all_image_features,
-                        text_features=all_text_features,
-                        logit_scale=current_logit_scale,
-                        output_dict=True
-                    )
-
+                    logit_scale = model_out.pop("logit_scale")
+                    logit_scale_caption = model_out.pop("logit_scale_caption", logit_scale)
+                    inputs = {}
+                    for key, val in accum_features.items():
+                        accumulated = accum_features[key]
+                        inputs[key] = torch.cat(accumulated[:j] +  [model_out[key]] + accumulated[j + 1:])
+                    
+                    # Add is_caption flag and logit scales
+                    inputs["is_caption"] = is_caption
+                    inputs["logit_scale"] = logit_scale
+                    inputs["logit_scale_caption"] = logit_scale_caption
+                    
+                    losses = loss(**inputs, output_dict=True)
+                    del inputs
                     total_loss = sum(losses.values())
                     losses["loss"] = total_loss
                 backward(total_loss, scaler)

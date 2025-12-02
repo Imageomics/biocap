@@ -404,9 +404,9 @@ def get_wds_dataset(args, preprocess_img, is_train, epoch=0, floor=False, tokeni
         pipeline.extend([
             wds.select(filter_no_caption_or_no_image),
             wds.decode("pilrgb", handler=log_and_continue),
-            wds.rename(image="jpg;png;jpeg;webp", sci="sci.txt", com="com.txt", taxon="taxon.txt", sci_com="sci_com.txt", taxon_com="taxon_com.txt", caption="caption.txt"),
-            wds.map_dict(image=preprocess_img, sci=lambda sci: tokenizer(sci)[0], com=lambda com: tokenizer(com)[0], taxon=lambda taxon: tokenizer(taxon)[0], sci_com=lambda sci_com: tokenizer(sci_com)[0], taxon_com=lambda taxon_com: tokenizer(taxon_com)[0], caption=lambda caption: tokenizer(caption)[0]),
-            wds.to_tuple("image", "sci", "com", "taxon", "sci_com", "taxon_com", "caption"),
+            wds.rename(image="jpg;png;jpeg;webp",sci="sci.txt", com="com.txt",taxon="taxon.txt", sci_com="sci_com.txt", taxon_com = "taxon_com.txt", caption="caption.txt"),
+            wds.map_dict(image=preprocess_img, sci=lambda sci: tokenizer(sci)[0], com=lambda com: tokenizer(com)[0], taxon=lambda taxon: tokenizer(taxon)[0], sci_com=lambda sci_com: tokenizer(sci_com)[0], taxon_com=lambda taxon_com: tokenizer(taxon_com)[0],caption=lambda caption: tokenizer(caption)[0] ),
+            wds.to_tuple("image", "sci", "com", "taxon", "sci_com", "taxon_com","caption"),
             wds.batched(args.batch_size, partial=not is_train)
         ])
     else:

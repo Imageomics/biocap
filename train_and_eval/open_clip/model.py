@@ -42,7 +42,6 @@ class CLIPVisionCfg:
     final_ln_after_pool: bool = False  # apply final LayerNorm after pooling
     pool_type: str = 'tok'
     output_tokens: bool = False
-    dual_projector: bool = False  # whether to use dual projector for taxonomic and caption features 
     act_kwargs: Optional[dict] = None
     norm_kwargs: Optional[dict] = None
 
@@ -164,7 +163,6 @@ def _build_vision_tower(
             final_ln_after_pool=vision_cfg.final_ln_after_pool,
             pool_type=vision_cfg.pool_type,
             output_tokens=vision_cfg.output_tokens,
-            dual_projector=vision_cfg.dual_projector,
             output_dim=embed_dim,
             act_layer=act_layer,
             norm_layer=norm_layer,
@@ -283,21 +281,21 @@ class CLIP(nn.Module):
         return no_wd
 
     def encode_image(self, image, normalize: bool = False):
+        # Expect visual to return both taxonomic and caption features
         features = self.visual(image)
-
+        
         # Handle both the single feature and dual feature cases
         if isinstance(features, tuple) and len(features) == 2:
-            # Dual projector mode: returns (tax_features, caption_features)
             tax_features, caption_features = features
             if normalize:
                 tax_features = F.normalize(tax_features, dim=-1)
                 caption_features = F.normalize(caption_features, dim=-1)
             return tax_features, caption_features
         else:
-            # Single projector mode: returns only one feature
+            # For backward compatibility with original implementation
             if normalize:
                 features = F.normalize(features, dim=-1)
-            return features
+            return features, features  # Return the same features for both paths
 
     def encode_text(self, text, normalize: bool = False):
         cast_dtype = self.transformer.get_cast_dtype()

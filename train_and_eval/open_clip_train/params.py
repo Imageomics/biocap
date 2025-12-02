@@ -476,17 +476,17 @@ def parse_args(args):
         help='A string to specify a specific distributed loss implementation.'
     )
     parser.add_argument(
+        "--dual-projector",
+        default=False,
+        action='store_true',
+        help="Enable dual projector mode for taxonomic and caption features."
+    )
+    parser.add_argument(
         "--text-type",
         default="random",
         type=str,
         choices=["random", "sci", "com", "taxon", "sci_com", "taxon_com", "caption"],
         help="Type of text to use (randomly selected during training if 'random')."
-    )
-    parser.add_argument(
-        "--dual-projector",
-        default=False,
-        action='store_true',
-        help="Enable dual projector mode for taxonomic and caption features."
     )
 
     args = parser.parse_args(args)

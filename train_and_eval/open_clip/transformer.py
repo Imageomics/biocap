@@ -536,12 +536,10 @@ class VisionTransformer(nn.Module):
             act_layer: Callable = nn.GELU,
             norm_layer: Callable = LayerNorm,
             output_tokens: bool = False,
-            dual_projector: bool = False,
     ):
         super().__init__()
         assert pool_type in ('tok', 'avg', 'none')
         self.output_tokens = output_tokens
-        self.dual_projector = dual_projector
         image_height, image_width = self.image_size = to_2tuple(image_size)
         patch_height, patch_width = self.patch_size = to_2tuple(patch_size)
         self.grid_size = (image_height // patch_height, image_width // patch_width)
@@ -625,10 +623,7 @@ class VisionTransformer(nn.Module):
         self.ln_post = norm_layer(pool_dim)
         self.proj = nn.Parameter(scale * torch.randn(pool_dim, output_dim))
 
-        if self.dual_projector:
-            self.caption_proj = nn.Parameter(scale * torch.randn(pool_dim, output_dim))
-        else:
-            self.caption_proj = None
+        self.caption_proj = nn.Parameter(scale * torch.randn(pool_dim, output_dim))
 
         self.init_parameters()
 
@@ -836,18 +831,15 @@ class VisionTransformer(nn.Module):
 
         tax_pooled = pooled @ self.proj
 
-        if self.dual_projector:
-            # Two projector mode: return both taxonomic and caption features
-            caption_pooled = pooled @ self.caption_proj if self.caption_proj is not None else tax_pooled
+        # two projector 
+        caption_pooled = pooled @ self.caption_proj
 
-            if self.output_tokens:
-                return tax_pooled, caption_pooled, tokens
-            return tax_pooled, caption_pooled
-        else:
-            # Single projector mode: return only one feature
-            if self.output_tokens:
-                return tax_pooled, tokens
-            return tax_pooled
+        
+
+        if self.output_tokens:
+            return tax_pooled, caption_pooled,tokens
+        
+        return tax_pooled, caption_pooled
 
 
 def text_global_pool(
