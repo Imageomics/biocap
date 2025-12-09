@@ -130,9 +130,17 @@ INQUIRE is an iNaturalist-based [dataset](https://github.com/inquire-benchmark/I
 This task is to use the provided descriptive caption to retrieve the associated images from each source. CSVs are provided, in the `retrieval_annotations/` directory, for each with the required information to evaluate retrieval performance.
 
 **Important Note on Media Usage:**
-To comply with Cornell Lab's and PlantID's media usage terms, we only provide asset IDs here.
+To comply with [Cornell Lab's media usage terms](https://support.ebird.org/en/support/solutions/articles/48001064551-using-and-requesting-media), we only provide asset IDs here.
 No images or download links are included.
-Researchers who need the same media may contact Cornell Lab or PlantID directly to request access.
+Researchers who need the same media should contact Cornell Lab directly (macaulaylibrary@cornell.edu) to request access.
+
+To access the PlantID images, we recommend using the [cautious-robot package](https://github.com/Imageomics/cautious-robot) to automatically validate the download, since it is not a packaged benchmark:
+
+```bash
+pip install cautious-robot
+cautious-robot -i <path/to/benchmark-CSV> -o <path/to/images/folder> -n id -u source_url -v md5
+# ex: cautious-robot -i retrieval_annotations/plantID.csv -o images/plants -n id -u source_url -v md5
+```
 
 **Files:**
 - **`cornell_bird.csv`** (1.4MB): Cornell bird dataset for identification and description ([data](https://www.macaulaylibrary.org/)).
