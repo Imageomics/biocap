@@ -150,6 +150,7 @@ cautious-robot -i <path/to/benchmark-CSV> -o <path/to/images/folder> -n id -u so
 - Columns: `id`, `captions`, `md5`
 - Each row contains an image ID, descriptive caption, and MD5 hash for verification.
 - The `md5` column is provided to ensure reproducibility (checks the same images are retrieved).
+- `plantID.csv` also has a `source_url` column for downloading the images.
 
 **Example Entries:**
 ```csv
