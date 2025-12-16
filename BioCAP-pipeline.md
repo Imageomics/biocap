@@ -127,14 +127,19 @@ INQUIRE is an iNaturalist-based [dataset](https://github.com/inquire-benchmark/I
 
 ### Text-to-Image Retrieval Benchmarks
 
-This task is to use the provided descriptive caption to retrieve the associated images from each source. CSVs are provided, in the `retrieval_annotations/` directory, for each with the required information to download the precise images used.
-We recommend using the [cautious-robot package](https://github.com/Imageomics/cautious-robot) to automatically validate the download, since these are not packaged benchmarks:
+This task is to use the provided descriptive caption to retrieve the associated images from each source. CSVs are provided, in the `retrieval_annotations/` directory, for each with the required information to evaluate retrieval performance.
+
+**Important Note on Media Usage:**
+To comply with [Cornell Lab's media usage terms](https://support.ebird.org/en/support/solutions/articles/48001064551-using-and-requesting-media), we only provide asset IDs here.
+No images or download links are included.
+Researchers who need the same media should contact Cornell Lab directly (macaulaylibrary@cornell.edu) to request access.
+
+To access the PlantID images, we recommend using the [cautious-robot package](https://github.com/Imageomics/cautious-robot) to automatically validate the download, since it is not a packaged benchmark:
 
 ```bash
 pip install cautious-robot
 cautious-robot -i <path/to/benchmark-CSV> -o <path/to/images/folder> -n id -u source_url -v md5
-
-# ex: cautious-robot -i retrieval_annotations/cornell_bird.csv -o images/cornell_bird -n id -u source_url -v md5
+# ex: cautious-robot -i retrieval_annotations/plantID.csv -o images/plants -n id -u source_url -v md5
 ```
 
 **Files:**
@@ -142,12 +147,13 @@ cautious-robot -i <path/to/benchmark-CSV> -o <path/to/images/folder> -n id -u so
 - **`plantID.csv`** (1.4MB): Plant identification and description [data](https://plantid.net/).
 
 **Format:**
-- Columns: `id`, `source_url`, `captions`, `md5`
-- Each row contains an image ID, source URL (typically Macaulay Library), and descriptive caption.
+- Columns: `id`, `captions`, `md5`
+- Each row contains an image ID, descriptive caption, and MD5 hash for verification.
 - The `md5` column is provided to ensure reproducibility (checks the same images are retrieved).
+- `plantID.csv` also has a `source_url` column for downloading the images.
 
 **Example Entries:**
 ```csv
-id,source_url,captions,md5
-22552061,https://macaulaylibrary.org/asset/22552061,"Aberts Towhee, Large, ground-dwelling sparrow with a thick bill and long tail. Brown overall with warm reddish brown undertail.", [ADD MD5]
+id,captions,md5
+22552061,"Aberts_Towhee, Large, ground-dwelling sparrow with a thick bill and long tail. Brown overall with warm reddish brown undertail.",b3475de32e45c44033071fcfa524effa
 ```
